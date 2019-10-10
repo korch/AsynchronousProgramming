@@ -48,38 +48,45 @@ namespace AsyncAwait.Task1.CancellationTokens
             Console.ReadLine();
         }
 
-        private static async Task StartCalculation(int n, CancellationToken token)
+        private static void CalculateSum(int n)
         {
-            var sum = await CalculateAsync(n, token);
-            Console.WriteLine($"Sum for {n} = {sum}.");
-        }
-
-        private static async Task CalculateSum(int n)
-        {
-            // todo: add code for cts
-            // todo: make calculation asynchronous
-
             var cts = new CancellationTokenSource();
-            StartCalculation(n, cts.Token);
-        
-          //  Console.WriteLine($"Sum for {n} = {sum}.");
-            //Console.WriteLine();
-            //Console.WriteLine("Enter N: ");
-            // todo: add code to process cancellation and uncomment this line    
-         //   cts.Cancel();
-            Console.WriteLine($"Sum for {n} cancelled...");
-                        
-            Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
-          //  cts.Cancel();
-            
-          //  StartCalculation(n, cts.Token);
+            var sum = CalculateAsync(n, cts.Token);
+
+            Console.WriteLine($"The task for {n} started... Enter N to cancel the request or q to stop:");
+
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out int v)) {
+                cts.Cancel();
+                CalculateSum(v);
+            } else {
+                Console.WriteLine("Enter N for calculate or q for exit.");
+            }
         }
 
-        private static async Task<long> CalculateAsync(int n, CancellationToken token)
+        private static async Task CalculateAsync(int n, CancellationToken token)
         {
             var sum = await Task.Run(() => Calculator.Calculate(n, token), token);
 
-            return sum;
+            if (!token.IsCancellationRequested)
+                Console.WriteLine($"Sum for {n} = {sum}.");
+            else
+                Console.WriteLine($"Sum for {n} cancelled... equal: {sum}");
         }
+
+        // original method
+        //private static void CalculateSum(int n)
+        //{
+        //    // todo: add code for cts
+        //    // todo: make calculation asynchronous
+        //    long sum = Calculator.Calculate(n);
+        //    Console.WriteLine($"Sum for {n} = {sum}.");
+        //    Console.WriteLine();
+        //    Console.WriteLine("Enter N: ");
+        //    // todo: add code to process cancellation and uncomment this line    
+        //    // Console.WriteLine($"Sum for {n} cancelled...");
+
+        //    Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
+        //}
     }
 }
