@@ -50,17 +50,22 @@ namespace AsyncAwait.Task1.CancellationTokens
 
         private static void CalculateSum(int n)
         {
-            var cts = new CancellationTokenSource();
-            var sum = CalculateAsync(n, cts.Token);
+            using (var cts = new CancellationTokenSource())
+            {
+                var sum = CalculateAsync(n, cts.Token);
 
-            Console.WriteLine($"The task for {n} started... Enter N to cancel the request or q to stop:");
+                Console.WriteLine($"The task for {n} started... Enter N to cancel the request or q to stop:");
 
-            var input = Console.ReadLine();
-            if (int.TryParse(input, out int v)) {
-                cts.Cancel();
-                CalculateSum(v);
-            } else {
-                Console.WriteLine("Enter N for calculate or q for exit.");
+                var input = Console.ReadLine();
+                if (int.TryParse(input, out int v))
+                {
+                    cts.Cancel();
+                    CalculateSum(v);
+                }
+                else
+                {
+                    Console.WriteLine("Enter N for calculate or q for exit.");
+                }
             }
         }
 

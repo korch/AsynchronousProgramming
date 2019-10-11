@@ -16,8 +16,8 @@ namespace AsyncAwait.Task2.CodeReviewChallenge.Controllers
 
         public HomeController(IAssistant assistant, IPrivacyDataService privacyDataService)
         {
-            _assistant = assistant ?? throw new ArgumentNullException(nameof(assistant));
-            _privacyDataService = privacyDataService ?? throw new ArgumentNullException(nameof(privacyDataService));
+            _assistant = assistant; //?? throw new ArgumentNullException(nameof(assistant));
+            _privacyDataService = privacyDataService; //?? throw new ArgumentNullException(nameof(privacyDataService));
         }
 
         public ActionResult Index()
@@ -25,9 +25,9 @@ namespace AsyncAwait.Task2.CodeReviewChallenge.Controllers
             return View();
         }
 
-        public ActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
-            ViewBag.Message = _privacyDataService.GetPrivacyDataAsync().Result;
+            ViewBag.Message = await _privacyDataService.GetPrivacyDataAsync().ConfigureAwait(false);
             return View();
         }
 
