@@ -36,7 +36,7 @@ namespace AsyncAwait.Task2.CodeReviewChallenge.Middleware
                     _statisticService.GetVisitsCountAsync(path).GetAwaiter().GetResult().ToString());
             }
 
-            Thread.Sleep(3000); // without this the statistic counter does not work
+          //  Thread.Sleep(3000); // without this the statistic counter does not work
             await _next(context);
         }
     }
