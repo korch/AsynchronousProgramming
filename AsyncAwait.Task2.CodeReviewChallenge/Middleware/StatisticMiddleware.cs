@@ -25,13 +25,13 @@ namespace AsyncAwait.Task2.CodeReviewChallenge.Middleware
 
             await _statisticService.RegisterVisitAsync(path);
 
-            UpdateHeaders();
+            await UpdateHeaders();
 
-            void UpdateHeaders()
+            async Task UpdateHeaders()
             {
                 context.Response.Headers.Add(
                     CustomHttpHeaders.TotalPageVisits,
-                    _statisticService.GetVisitsCountAsync(path).GetAwaiter().GetResult().ToString());
+                   (await _statisticService.GetVisitsCountAsync(path)).ToString());
             }
 
             await _next(context);
